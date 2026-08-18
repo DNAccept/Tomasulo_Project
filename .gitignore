@@ -1,0 +1,27 @@
+# Compiled objects / binaries
+*.o
+*.obj
+*.exe
+*.out
+a.out
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# MATLAB
+*.asv
+*.m~
+slprj/
+
+# Editor/OS cruft
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Large/raw simulator output (keep processed summaries, not every raw dump)
+results/raw/*
+!results/raw/.gitkeep

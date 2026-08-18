@@ -1,0 +1,5 @@
+{
+  "adder_reservation_stations": 3,
+  "multiplier_reservation_stations": 3,
+  "notes": "Minimum 3 per functional-unit type per System Requirements (§G). Increase if your kernel's ILP profile warrants it, and document why."
+}

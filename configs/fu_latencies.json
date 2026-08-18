@@ -1,0 +1,7 @@
+{
+  "ADD_D_latency_cycles": 2,
+  "SUB_D_latency_cycles": 2,
+  "MUL_D_latency_cycles": 6,
+  "DIV_D_latency_cycles": null,
+  "notes": "Baseline figures per H&P's illustrative example. Confirm against your team's assigned configuration before running experiments."
+}
