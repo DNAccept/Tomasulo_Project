@@ -1,0 +1,301 @@
+========================================================================================
+               TOMASULO ALGORITHM 4-INSTRUCTION DEMO SIMULATION TRACE                   
+                     CPEN 315 / CPEN 733 — Project 5 Starter Demo                       
+========================================================================================
+Latencies: ADD.D = 2 cycles, SUB.D = 2 cycles, MUL.D = 6 cycles
+Reservation Stations: 3 Adder/Sub (ADD1-3), 2 Multiplier (MUL1-2)
+
+========================================================================================
+                                     CYCLE  1
+========================================================================================
+
+[Instruction Status]
+ID   | Instruction            | Issue  | Exec Complete  | Write Result
+-----+------------------------+--------+---------------+-------------
+1    | ADD.D F2, F4, F6       | 1      | --             | --          
+2    | ADD.D F8, F10, F12     | --     | --             | --          
+3    | MUL.D F14, F2, F6      | --     | --             | --          
+4    | SUB.D F16, F8, F2      | --     | --             | --          
+
+[Reservation Stations]
+Tag   | Busy | Op    | Vj      | Vk      | Qj    | Qk    | Rem   | State   
+------+------+-------+---------+---------+-------+-------+-------+----------
+ADD1  | YES  | ADD.D | 4.0     | 2.0     |  --   |  --   | 2     | WAIT    
+ADD2  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+ADD3  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+MUL1  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+MUL2  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+
+[Common Data Bus (CDB)]
+INACTIVE (No broadcast this cycle)
+
+[Register Status (Pending Producers)]
+F2 : Qi = ADD1  (Value in file: 4.00)
+
+========================================================================================
+                                     CYCLE  2
+========================================================================================
+
+[Instruction Status]
+ID   | Instruction            | Issue  | Exec Complete  | Write Result
+-----+------------------------+--------+---------------+-------------
+1    | ADD.D F2, F4, F6       | 1      | 2..exec        | --          
+2    | ADD.D F8, F10, F12     | 2      | --             | --          
+3    | MUL.D F14, F2, F6      | --     | --             | --          
+4    | SUB.D F16, F8, F2      | --     | --             | --          
+
+[Reservation Stations]
+Tag   | Busy | Op    | Vj      | Vk      | Qj    | Qk    | Rem   | State   
+------+------+-------+---------+---------+-------+-------+-------+----------
+ADD1  | YES  | ADD.D | 4.0     | 2.0     |  --   |  --   | 1     | EXEC    
+ADD2  | YES  | ADD.D | 10.0    | 5.0     |  --   |  --   | 2     | WAIT    
+ADD3  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+MUL1  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+MUL2  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+
+[Common Data Bus (CDB)]
+INACTIVE (No broadcast this cycle)
+
+[Register Status (Pending Producers)]
+F2 : Qi = ADD1  (Value in file: 4.00)
+F8 : Qi = ADD2  (Value in file: 13.00)
+
+========================================================================================
+                                     CYCLE  3
+========================================================================================
+
+[Instruction Status]
+ID   | Instruction            | Issue  | Exec Complete  | Write Result
+-----+------------------------+--------+---------------+-------------
+1    | ADD.D F2, F4, F6       | 1      | 2..3           | --          
+2    | ADD.D F8, F10, F12     | 2      | 3..exec        | --          
+3    | MUL.D F14, F2, F6      | 3      | --             | --          
+4    | SUB.D F16, F8, F2      | --     | --             | --          
+
+[Reservation Stations]
+Tag   | Busy | Op    | Vj      | Vk      | Qj    | Qk    | Rem   | State   
+------+------+-------+---------+---------+-------+-------+-------+----------
+ADD1  | YES  | ADD.D | 4.0     | 2.0     |  --   |  --   | 0     | DONE    
+ADD2  | YES  | ADD.D | 10.0    | 5.0     |  --   |  --   | 1     | EXEC    
+ADD3  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+MUL1  | YES  | MUL.D | --      | 2.0     | ADD1  |  --   | 6     | WAIT    
+MUL2  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+
+[Common Data Bus (CDB)]
+INACTIVE (No broadcast this cycle)
+
+[Register Status (Pending Producers)]
+F2 : Qi = ADD1  (Value in file: 4.00)
+F8 : Qi = ADD2  (Value in file: 13.00)
+F14: Qi = MUL1  (Value in file: 22.00)
+
+========================================================================================
+                                     CYCLE  4
+========================================================================================
+
+[Instruction Status]
+ID   | Instruction            | Issue  | Exec Complete  | Write Result
+-----+------------------------+--------+---------------+-------------
+1    | ADD.D F2, F4, F6       | 1      | 2..3           | 4           
+2    | ADD.D F8, F10, F12     | 2      | 3..4           | --          
+3    | MUL.D F14, F2, F6      | 3      | 4..exec        | --          
+4    | SUB.D F16, F8, F2      | 4      | --             | --          
+
+[Reservation Stations]
+Tag   | Busy | Op    | Vj      | Vk      | Qj    | Qk    | Rem   | State   
+------+------+-------+---------+---------+-------+-------+-------+----------
+ADD1  | YES  | SUB.D | --      | 6.0     | ADD2  |  --   | 2     | WAIT    
+ADD2  | YES  | ADD.D | 10.0    | 5.0     |  --   |  --   | 0     | DONE    
+ADD3  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+MUL1  | YES  | MUL.D | 6.0     | 2.0     |  --   |  --   | 5     | EXEC    
+MUL2  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+
+[Common Data Bus (CDB)]
+BROADCAST -> Producer: ADD1, Value: 6.00 (Inst #1)
+
+[Register Status (Pending Producers)]
+F8 : Qi = ADD2  (Value in file: 13.00)
+F14: Qi = MUL1  (Value in file: 22.00)
+F16: Qi = ADD1  (Value in file: 25.00)
+
+========================================================================================
+                                     CYCLE  5
+========================================================================================
+
+[Instruction Status]
+ID   | Instruction            | Issue  | Exec Complete  | Write Result
+-----+------------------------+--------+---------------+-------------
+1    | ADD.D F2, F4, F6       | 1      | 2..3           | 4           
+2    | ADD.D F8, F10, F12     | 2      | 3..4           | 5           
+3    | MUL.D F14, F2, F6      | 3      | 4..exec        | --          
+4    | SUB.D F16, F8, F2      | 4      | 5..exec        | --          
+
+[Reservation Stations]
+Tag   | Busy | Op    | Vj      | Vk      | Qj    | Qk    | Rem   | State   
+------+------+-------+---------+---------+-------+-------+-------+----------
+ADD1  | YES  | SUB.D | 15.0    | 6.0     |  --   |  --   | 1     | EXEC    
+ADD2  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+ADD3  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+MUL1  | YES  | MUL.D | 6.0     | 2.0     |  --   |  --   | 4     | EXEC    
+MUL2  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+
+[Common Data Bus (CDB)]
+BROADCAST -> Producer: ADD2, Value: 15.00 (Inst #2)
+
+[Register Status (Pending Producers)]
+F14: Qi = MUL1  (Value in file: 22.00)
+F16: Qi = ADD1  (Value in file: 25.00)
+
+========================================================================================
+                                     CYCLE  6
+========================================================================================
+
+[Instruction Status]
+ID   | Instruction            | Issue  | Exec Complete  | Write Result
+-----+------------------------+--------+---------------+-------------
+1    | ADD.D F2, F4, F6       | 1      | 2..3           | 4           
+2    | ADD.D F8, F10, F12     | 2      | 3..4           | 5           
+3    | MUL.D F14, F2, F6      | 3      | 4..exec        | --          
+4    | SUB.D F16, F8, F2      | 4      | 5..6           | --          
+
+[Reservation Stations]
+Tag   | Busy | Op    | Vj      | Vk      | Qj    | Qk    | Rem   | State   
+------+------+-------+---------+---------+-------+-------+-------+----------
+ADD1  | YES  | SUB.D | 15.0    | 6.0     |  --   |  --   | 0     | DONE    
+ADD2  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+ADD3  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+MUL1  | YES  | MUL.D | 6.0     | 2.0     |  --   |  --   | 3     | EXEC    
+MUL2  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+
+[Common Data Bus (CDB)]
+INACTIVE (No broadcast this cycle)
+
+[Register Status (Pending Producers)]
+F14: Qi = MUL1  (Value in file: 22.00)
+F16: Qi = ADD1  (Value in file: 25.00)
+
+========================================================================================
+                                     CYCLE  7
+========================================================================================
+
+[Instruction Status]
+ID   | Instruction            | Issue  | Exec Complete  | Write Result
+-----+------------------------+--------+---------------+-------------
+1    | ADD.D F2, F4, F6       | 1      | 2..3           | 4           
+2    | ADD.D F8, F10, F12     | 2      | 3..4           | 5           
+3    | MUL.D F14, F2, F6      | 3      | 4..exec        | --          
+4    | SUB.D F16, F8, F2      | 4      | 5..6           | 7           
+
+[Reservation Stations]
+Tag   | Busy | Op    | Vj      | Vk      | Qj    | Qk    | Rem   | State   
+------+------+-------+---------+---------+-------+-------+-------+----------
+ADD1  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+ADD2  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+ADD3  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+MUL1  | YES  | MUL.D | 6.0     | 2.0     |  --   |  --   | 2     | EXEC    
+MUL2  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+
+[Common Data Bus (CDB)]
+BROADCAST -> Producer: ADD1, Value: 9.00 (Inst #4)
+
+[Register Status (Pending Producers)]
+F14: Qi = MUL1  (Value in file: 22.00)
+
+========================================================================================
+                                     CYCLE  8
+========================================================================================
+
+[Instruction Status]
+ID   | Instruction            | Issue  | Exec Complete  | Write Result
+-----+------------------------+--------+---------------+-------------
+1    | ADD.D F2, F4, F6       | 1      | 2..3           | 4           
+2    | ADD.D F8, F10, F12     | 2      | 3..4           | 5           
+3    | MUL.D F14, F2, F6      | 3      | 4..exec        | --          
+4    | SUB.D F16, F8, F2      | 4      | 5..6           | 7           
+
+[Reservation Stations]
+Tag   | Busy | Op    | Vj      | Vk      | Qj    | Qk    | Rem   | State   
+------+------+-------+---------+---------+-------+-------+-------+----------
+ADD1  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+ADD2  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+ADD3  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+MUL1  | YES  | MUL.D | 6.0     | 2.0     |  --   |  --   | 1     | EXEC    
+MUL2  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+
+[Common Data Bus (CDB)]
+INACTIVE (No broadcast this cycle)
+
+[Register Status (Pending Producers)]
+F14: Qi = MUL1  (Value in file: 22.00)
+
+========================================================================================
+                                     CYCLE  9
+========================================================================================
+
+[Instruction Status]
+ID   | Instruction            | Issue  | Exec Complete  | Write Result
+-----+------------------------+--------+---------------+-------------
+1    | ADD.D F2, F4, F6       | 1      | 2..3           | 4           
+2    | ADD.D F8, F10, F12     | 2      | 3..4           | 5           
+3    | MUL.D F14, F2, F6      | 3      | 4..9           | --          
+4    | SUB.D F16, F8, F2      | 4      | 5..6           | 7           
+
+[Reservation Stations]
+Tag   | Busy | Op    | Vj      | Vk      | Qj    | Qk    | Rem   | State   
+------+------+-------+---------+---------+-------+-------+-------+----------
+ADD1  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+ADD2  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+ADD3  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+MUL1  | YES  | MUL.D | 6.0     | 2.0     |  --   |  --   | 0     | DONE    
+MUL2  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+
+[Common Data Bus (CDB)]
+INACTIVE (No broadcast this cycle)
+
+[Register Status (Pending Producers)]
+F14: Qi = MUL1  (Value in file: 22.00)
+
+========================================================================================
+                                     CYCLE 10
+========================================================================================
+
+[Instruction Status]
+ID   | Instruction            | Issue  | Exec Complete  | Write Result
+-----+------------------------+--------+---------------+-------------
+1    | ADD.D F2, F4, F6       | 1      | 2..3           | 4           
+2    | ADD.D F8, F10, F12     | 2      | 3..4           | 5           
+3    | MUL.D F14, F2, F6      | 3      | 4..9           | 10          
+4    | SUB.D F16, F8, F2      | 4      | 5..6           | 7           
+
+[Reservation Stations]
+Tag   | Busy | Op    | Vj      | Vk      | Qj    | Qk    | Rem   | State   
+------+------+-------+---------+---------+-------+-------+-------+----------
+ADD1  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+ADD2  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+ADD3  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+MUL1  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+MUL2  | NO   | --    | --      | --      |  --   |  --   | 0     | IDLE    
+
+[Common Data Bus (CDB)]
+BROADCAST -> Producer: MUL1, Value: 12.00 (Inst #3)
+
+[Register Status (Pending Producers)]
+All architectural registers hold valid values in Register File.
+
+========================================================================================
+                              SIMULATION COMPLETED AT CYCLE 10                           
+========================================================================================
+
+Final Instruction Summary Table:
+ID   | Instruction            | Issue  | Exec Range     | Write Result
+-----+------------------------+--------+---------------+-------------
+1    | ADD.D F2, F4, F6       | 1      |  2 ..  3        | 4           
+2    | ADD.D F8, F10, F12     | 2      |  3 ..  4        | 5           
+3    | MUL.D F14, F2, F6      | 3      |  4 ..  9        | 10          
+4    | SUB.D F16, F8, F2      | 4      |  5 ..  6        | 7           
+
+Final Register File Values:
+F2  = 6.00 (expected 6.00)
+F8  = 15.00 (expected 15.00)
+F14 = 12.00 (expected 12.00)
+F16 = 9.00 (expected 9.00)

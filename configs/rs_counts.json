@@ -1,5 +1,7 @@
 {
   "adder_reservation_stations": 3,
   "multiplier_reservation_stations": 3,
-  "notes": "Minimum 3 per functional-unit type per System Requirements (§G). Increase if your kernel's ILP profile warrants it, and document why."
+  "adder_tags": ["ADD1", "ADD2", "ADD3"],
+  "multiplier_tags": ["MUL1", "MUL2", "MUL3"],
+  "notes": "Configured 3 Adder/Subtractor and 3 Multiplier/Divider stations per System Requirements (§G). This provides buffer capacity to hide up to 6 cycles of MUL latency while buffering overlapping route-cost ADD/SUB accumulations in the trotro kernel without stalling issue."
 }

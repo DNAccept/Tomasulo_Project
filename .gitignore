@@ -25,3 +25,7 @@ Thumbs.db
 # Large/raw simulator output (keep processed summaries, not every raw dump)
 results/raw/*
 !results/raw/.gitkeep
+
+
+# Custom
+week1_architecture_lead_guide.md
