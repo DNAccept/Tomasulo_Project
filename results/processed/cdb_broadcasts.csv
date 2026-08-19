@@ -1,0 +1,5 @@
+cycle,tag,value,inst_id
+4,ADD1,6.0,1
+5,ADD2,15.0,2
+7,ADD1,9.0,4
+10,MUL1,12.0,3

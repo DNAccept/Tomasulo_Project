@@ -1,0 +1,4 @@
+metric,value
+broadcast_count,4
+completed_instructions_seen,4
+ipc_proxy_completed_over_last_write_cycle,0.4
